@@ -70,10 +70,78 @@
     transition: width .25s linear; }
   .pct { font-size: 11px; margin-top: 3px; }
 
-  #bsod { position: fixed; inset: 0; z-index: 50; display: none; background: #0078d7; color: #fff;
-    font-family: "Segoe UI", sans-serif; padding: 10vh 10vw; }
-  #bsod .face { font-size: clamp(60px, 12vw, 140px); }
-  #bsod p { font-size: clamp(16px, 2.4vw, 24px); max-width: 900px; }
+  .win .bar button { flex: none; }
+  body:not([data-os=retro]) .progress { border: 0; height: 6px; border-radius: 3px; background: #e3e3e8; overflow: hidden; }
+  body:not([data-os=retro]) .progress i { background: var(--accent); border-radius: 3px; }
+  body:not([data-os=retro]) .win code { background: rgba(0,0,0,.07); border-radius: 4px; padding: 1px 4px; }
+
+  body[data-os=win] { --accent: #005fb8; }
+  body[data-os=win] .win { background: #f3f3f3; border: 1px solid #c7c7c7; border-radius: 8px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,.4); font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; }
+  body[data-os=win] .win .bar { background: #f3f3f3; color: #1a1a1a; font-weight: 400; font-size: 12px; height: 32px; padding: 0 0 0 12px; gap: 0; }
+  body[data-os=win] .win .cap { width: 46px; height: 32px; border: 0; background: transparent; color: #1a1a1a; font-size: 11px; cursor: pointer; }
+  body[data-os=win] .win .cap:hover { background: #e5e5e5; }
+  body[data-os=win] .win .cap.close:hover { background: #c42b1c; color: #fff; }
+  body[data-os=win] .win .body { background: #fff; padding: 18px 16px; }
+  body[data-os=win] .win .btns { background: #f3f3f3; border-top: 1px solid #e5e5e5; justify-content: flex-end; padding: 12px 16px; }
+  body[data-os=win] .win button.ok { background: #005fb8; color: #fff; border: 1px solid #005fb8; border-radius: 4px; padding: 5px 20px; }
+
+  body[data-os=mac] { --accent: #007aff; }
+  body[data-os=mac] .win { background: rgba(246,246,246,.93); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+    border: .5px solid rgba(0,0,0,.3); border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.5);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; }
+  body[data-os=mac] .win .bar { background: transparent; color: #4d4d4d; font-size: 13px; height: 30px; padding: 0 10px; gap: 8px; }
+  body[data-os=mac] .win .bar span { text-align: center; margin-right: 52px; }
+  body[data-os=mac] .win .light { width: 12px; height: 12px; border-radius: 50%; border: .5px solid rgba(0,0,0,.18); padding: 0; cursor: pointer; }
+  body[data-os=mac] .win .light.red { background: #ff5f57; }
+  body[data-os=mac] .win .light.yellow { background: #febc2e; }
+  body[data-os=mac] .win .light.green { background: #28c840; }
+  body[data-os=mac] .win .body { padding: 6px 18px 12px; }
+  body[data-os=mac] .win .icon { font-size: 40px; }
+  body[data-os=mac] .win .btns { justify-content: flex-end; padding: 0 16px 14px; }
+  body[data-os=mac] .win button.ok { background: #007aff; color: #fff; border: 0; border-radius: 6px; padding: 4px 16px; }
+
+  body[data-os=linux] { --accent: #3584e4; }
+  body[data-os=linux] .win { background: #fafafa; border: 1px solid rgba(0,0,0,.14); border-radius: 12px; overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,.5); font-family: Cantarell, Ubuntu, "Noto Sans", system-ui, sans-serif; }
+  body[data-os=linux] .win .bar { background: #ebebeb; color: #2e3436; height: 46px; padding: 0 10px 0 44px; border-bottom: 1px solid #ddd; }
+  body[data-os=linux] .win .bar span { text-align: center; }
+  body[data-os=linux] .win .gx { width: 24px; height: 24px; border-radius: 50%; border: 0; background: rgba(0,0,0,.08); color: #2e3436; font-size: 15px; cursor: pointer; }
+  body[data-os=linux] .win .gx:hover { background: rgba(0,0,0,.15); }
+  body[data-os=linux] .win .body { padding: 16px; }
+  body[data-os=linux] .win .btns { justify-content: flex-end; padding: 0 16px 16px; }
+  body[data-os=linux] .win button.ok { background: #3584e4; color: #fff; border: 0; border-radius: 6px; padding: 6px 18px; font-weight: 700; }
+
+  body[data-os=ios] { --accent: #007aff; }
+  body[data-os=ios] .win { width: min(270px, 85vw); background: rgba(242,242,247,.94); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+    border: 0; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,.55); text-align: center;
+    font-family: -apple-system, "SF Pro Text", system-ui, sans-serif; }
+  body[data-os=ios] .win .bar { background: transparent; color: #000; font-size: 17px; padding: 18px 16px 2px; }
+  body[data-os=ios] .win .bar span { text-align: center; white-space: normal; }
+  body[data-os=ios] .win .body { flex-direction: column; align-items: center; gap: 6px; padding: 4px 16px 16px; }
+  body[data-os=ios] .win .btns { padding: 0; border-top: .5px solid rgba(60,60,67,.36); }
+  body[data-os=ios] .win button.ok { flex: 1; background: transparent; border: 0; color: #007aff; font-size: 17px; font-weight: 600; padding: 11px; }
+
+  body[data-os=android] { --accent: #6750a4; }
+  body[data-os=android] .win { width: min(312px, 88vw); background: #ece6f0; border: 0; border-radius: 28px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,.45); font-family: Roboto, "Google Sans", system-ui, sans-serif; }
+  body[data-os=android] .win .bar { background: transparent; color: #1d1b20; font-size: 22px; font-weight: 400; padding: 24px 24px 0; }
+  body[data-os=android] .win .bar span { white-space: normal; }
+  body[data-os=android] .win .body { color: #49454f; font-size: 14px; padding: 16px 24px; }
+  body[data-os=android] .win .btns { justify-content: flex-end; padding: 0 16px 18px; }
+  body[data-os=android] .win button.ok { background: transparent; border: 0; color: #6750a4; font-weight: 500; font-size: 14px; padding: 10px 14px; border-radius: 20px; }
+
+  #bsod { position: fixed; inset: 0; z-index: 50; display: none; }
+  #bsod.k-win { background: #0078d7; color: #fff; font-family: "Segoe UI", sans-serif; padding: 10vh 10vw; }
+  #bsod.k-win .face { font-size: clamp(60px, 12vw, 140px); }
+  #bsod.k-win p { font-size: clamp(16px, 2.4vw, 24px); max-width: 900px; }
+  #bsod.k-mac { background: rgba(30,30,30,.82); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: #fff;
+    font-family: -apple-system, "Helvetica Neue", sans-serif; padding: 12vh 16px; }
+  #bsod .panic-box { max-width: 560px; margin: 0 auto; background: rgba(0,0,0,.78); border-radius: 18px; padding: 28px 32px;
+    text-align: center; font-size: 15px; line-height: 1.45; }
+  #bsod .power { font-size: 56px; }
+  #bsod .code { font-family: ui-monospace, monospace; font-size: 12px; color: #999; }
+  #bsod.k-linux { background: #000; color: #ccc; font: 13px/1.5 ui-monospace, "DejaVu Sans Mono", monospace; padding: 16px; white-space: pre-wrap; overflow: hidden; }
 
   #reveal { position: fixed; inset: 0; z-index: 60; display: none; overflow-y: auto; padding: 32px 16px;
     background: radial-gradient(circle at 50% 0%, #2a1a5e, #0b0b14 70%); color: #f4f4f8;
@@ -125,12 +193,7 @@
   <div id="log"></div>
 </div>
 
-<div id="bsod">
-  <div class="face">:(</div>
-  <p>Your PC ran into a problem it couldn't handle: <b>a question that Google could have answered in 0.42 seconds.</b></p>
-  <p id="bsod-pct">0% complete</p>
-  <p style="font-size:14px">Stop code: PEBKAC_ASKED_INSTEAD_OF_SEARCHING</p>
-</div>
+<div id="bsod"></div>
 
 <div id="reveal">
   <div class="card">
@@ -171,8 +234,13 @@
   let ip = fakeIp;
 
   const ua = navigator.userAgent;
-  const os = /Windows/.test(ua) ? "Windows" : /Mac OS X/.test(ua) ? (/iPhone|iPad/.test(ua) ? "iOS" : "macOS")
-           : /Android/.test(ua) ? "Android" : /Linux/.test(ua) ? "Linux" : "a potato";
+  const isIOS = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const detected = isIOS ? "ios" : /Android/.test(ua) ? "android" : /Windows/.test(ua) ? "win"
+                 : /Mac OS X/.test(ua) ? "mac" : /Linux|X11|CrOS/.test(ua) ? "linux" : "retro";
+  const skins = ["win", "mac", "linux", "ios", "android", "retro"];
+  const skin = skins.includes(params.get("os")) ? params.get("os") : detected;
+  document.body.dataset.os = skin;
+  const os = { win: "Windows", mac: "macOS", linux: "Linux", ios: "iOS", android: "Android", retro: "a potato" }[detected];
   const browser = /Edg\//.test(ua) ? "Edge" : /Firefox\//.test(ua) ? "Firefox" : /Chrome\//.test(ua) ? "Chrome"
                 : /Safari\//.test(ua) ? "Safari" : "something weird";
   const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || "Earth").replace(/_/g, " ");
@@ -265,8 +333,8 @@
     if (finished || spawned >= MAX_WINDOWS) return;
     spawned++;
     const m = nextMessage();
-    const closeBtn = el("button", { className: "x", textContent: "×", title: "Close" });
-    const bar = el("div", { className: "bar" }, [el("span", { textContent: m.title }), closeBtn]);
+    const ctl = controls();
+    const bar = el("div", { className: "bar" }, [...(ctl.left || []), el("span", { textContent: m.title }), ...(ctl.right || [])]);
     const msg = el("div", { className: "msg" });
     if (m.progress) {
       const fill = el("i"), pct = el("div", { className: "pct", textContent: "0%" });
@@ -302,16 +370,60 @@
       spawn({ x: r.left, y: r.top });
       setTimeout(() => spawn({ x: r.left + 40, y: r.top + 30 }), 150);
     };
-    closeBtn.addEventListener("click", hydra);
-    okBtn.addEventListener("click", hydra);
+    win.querySelectorAll("button").forEach(b => b.addEventListener("click", hydra));
     beep();
     document.body.classList.remove("shake"); void document.body.offsetWidth; document.body.classList.add("shake");
   }
 
+  function controls() {
+    const b = (className, textContent, title) => el("button", { className, textContent, title });
+    switch (skin) {
+      case "win": return { right: [b("cap", "─", "Minimize"), b("cap", "☐", "Maximize"), b("cap close", "✕", "Close")] };
+      case "mac": return { left: [b("light red", "", "Close"), b("light yellow", "", "Minimize"), b("light green", "", "Zoom")] };
+      case "linux": return { right: [b("gx", "×", "Close")] };
+      case "retro": return { right: [b("x", "×", "Close")] };
+      default: return {};
+    }
+  }
+
+  const crashKind = { win: "win", retro: "win", mac: "mac", ios: "mac", linux: "linux", android: "linux" }[skin];
+  const crashScreens = {
+    win: `<div class="face">:(</div>
+      <p>Your ${isIOS || skin === "android" ? "device" : "PC"} ran into a problem it couldn't handle: <b>a question that Google could have answered in 0.42 seconds.</b></p>
+      <p id="crash-pct">0% complete</p>
+      <p style="font-size:14px">Stop code: PEBKAC_ASKED_INSTEAD_OF_SEARCHING</p>`,
+    mac: `<div class="panic-box">
+      <div class="power">⏻</div>
+      <p>You need to restart your computer. Hold down the Power button until it turns off, then press the Power button again.</p>
+      <p>Vous devez redémarrer votre ordinateur. Maintenez le bouton d'alimentation enfoncé jusqu'à ce qu'il s'éteigne, puis appuyez de nouveau dessus.</p>
+      <p>Sie müssen Ihren Computer neu starten. Halten Sie den Ein-/Ausschalter gedrückt, bis er ausgeht, und drücken Sie ihn dann erneut.</p>
+      <p>コンピュータを再起動する必要があります。電源ボタンを押し続けて電源を切り、もう一度押してください。</p>
+      <p class="code">panic(cpu 0 caller 0xffffff8000deadbeef): PEBKAC_ASKED_INSTEAD_OF_SEARCHING</p>
+      <p class="code" id="crash-pct"></p></div>`,
+    linux: `[  420.694201] Kernel panic - not syncing: PEBKAC_ASKED_INSTEAD_OF_SEARCHING
+[  420.694202] CPU: 0 PID: 1337 Comm: colleague Tainted: G      D    6.9.420-stupid-question #1
+[  420.694203] Hardware name: Human Brain, BIOS 0.0.1 never-updated
+[  420.694204] Call Trace:
+[  420.694205]  &lt;TASK&gt;
+[  420.694206]  ask_coworker+0x42/0x69
+[  420.694207]  skip_google+0xdead/0xbeef
+[  420.694208]  read_the_docs+0x0/0x0 [never_called]
+[  420.694209]  ? rtfm+0x1/0x1
+[  420.694210]  &lt;/TASK&gt;
+[  420.694211] Kernel Offset: disabled
+[  420.694212] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
+<span id="crash-pct"></span>`,
+  };
+  const crashProgress = {
+    win: p => `${p}% complete`,
+    mac: p => `Collecting diagnostic data… ${p}%`,
+    linux: p => `[  421.${String(p).padStart(3, "0")}000] Rebooting in ${Math.ceil((100 - p) / 20)} seconds..`,
+  };
+
   function drag(win, handle) {
     let sx, sy, ox, oy;
     handle.addEventListener("pointerdown", e => {
-      if (e.target.closest(".x")) return;
+      if (e.target.closest("button")) return;
       sx = e.clientX; sy = e.clientY; ox = win.offsetLeft; oy = win.offsetTop;
       handle.setPointerCapture(e.pointerId);
     });
@@ -357,12 +469,15 @@
     finished = true;
     [logTimer, spawnTimer, tick].forEach(clearInterval);
     document.querySelectorAll(".win").forEach(w => w.remove());
-    const b = document.getElementById("bsod"), pct = document.getElementById("bsod-pct");
+    const b = document.getElementById("bsod");
+    b.className = "k-" + crashKind;
+    b.innerHTML = crashScreens[crashKind];
     b.style.display = "block";
+    const pct = document.getElementById("crash-pct");
     let p = 0;
     const t = setInterval(() => {
       p = Math.min(100, p + rand(7, 19));
-      pct.textContent = p + "% complete";
+      pct.textContent = crashProgress[crashKind](p);
       if (p >= 100) { clearInterval(t); setTimeout(reveal, 500); }
     }, 300);
   }
