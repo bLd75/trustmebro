@@ -324,21 +324,75 @@
     o.connect(g).connect(audio.destination); o.start(); o.stop(audio.currentTime + .16);
   }
   const RICK = "dQw4w9WgXcQ";
-  let yt = null, wantSound = false;
+  const RICK_START = 42;
   const rickHint = el("div", { className: "hint", textContent: "🔇 Click or tap anywhere to hear the hacker's demands" });
-  function rickSound() {
-    wantSound = true;
-    if (!yt || !yt.unMute) return;
-    yt.unMute(); yt.setVolume(80); yt.playVideo();
-    rickHint.textContent = "🎶 The hacker's demands";
-  }
   window.onYouTubeIframeAPIReady = () => {
-    yt = new YT.Player("yt", {
+    new YT.Player("yt", {
       videoId: RICK,
-      playerVars: { autoplay: 1, mute: 1, controls: 0, playsinline: 1, loop: 1, playlist: RICK, rel: 0 },
-      events: { onReady: e => { e.target.mute(); e.target.playVideo(); if (wantSound) rickSound(); } },
+      playerVars: { autoplay: 1, mute: 1, controls: 0, playsinline: 1, start: RICK_START, rel: 0 },
+      events: {
+        onReady: e => { e.target.mute(); e.target.playVideo(); },
+        onStateChange: e => { if (e.data === YT.PlayerState.ENDED) { e.target.seekTo(RICK_START); e.target.playVideo(); } },
+      },
     });
   };
+
+  const NOTE = { Ab2: 44, C3: 48, Db3: 49, Eb3: 51, F3: 53, Ab4: 68, Bb4: 70, C5: 72, Db5: 73, Eb5: 75, F5: 77, Ab5: 80 };
+  const hook = [["Ab4", 1], ["Bb4", 1], ["Db5", 1], ["Bb4", 1]];
+  const ending = [["Db5", 4], ["Eb5", 2], ["C5", 3], ["Bb4", 1], ["Ab4", 2], [null, 2], ["Ab4", 2], ["Eb5", 4], ["Db5", 8]];
+  const MELODY = [
+    ...hook, ["F5", 3], ["F5", 3], ["Eb5", 6],
+    ...hook, ["Eb5", 3], ["Eb5", 3], ["Db5", 3], ["C5", 1], ["Bb4", 2],
+    ...hook, ...ending,
+    ...hook, ["F5", 3], ["F5", 3], ["Eb5", 6],
+    ...hook, ["Ab5", 4], ["C5", 2], ["Db5", 3], ["C5", 1], ["Bb4", 2],
+    ...hook, ...ending,
+  ];
+  const BASS = ["Db3", "Eb3", "C3", "F3", "Db3", "Eb3", "Ab2", "Ab2"];
+  const STEP = 60 / 113 / 4;
+  const LOOP = MELODY.reduce((a, [, len]) => a + len, 0);
+  const hz = n => 440 * 2 ** ((NOTE[n] - 69) / 12);
+  let master = null, noise = null;
+
+  function tone(type, freq, t, dur, vol) {
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g).connect(master); o.start(t); o.stop(t + dur + .02);
+  }
+  function kick(t) {
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(40, t + .12);
+    g.gain.setValueAtTime(.5, t); g.gain.exponentialRampToValueAtTime(.0001, t + .15);
+    o.connect(g).connect(master); o.start(t); o.stop(t + .16);
+  }
+  function hit(t, dur, vol, cutoff) {
+    const src = audio.createBufferSource(), f = audio.createBiquadFilter(), g = audio.createGain();
+    src.buffer = noise; f.type = "highpass"; f.frequency.value = cutoff;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    src.connect(f).connect(g).connect(master); src.start(t); src.stop(t + dur + .02);
+  }
+  function chiptune(t0) {
+    let t = t0;
+    MELODY.forEach(([n, len]) => { if (n) tone("square", hz(n), t, len * STEP * .9, .08); t += len * STEP; });
+    for (let i = 0; i < LOOP; i += 2) {
+      const at = t0 + ((i + 4) % LOOP) * STEP;
+      tone("triangle", hz(BASS[Math.floor(i / 8) % BASS.length]), at, STEP * 1.6, .25);
+      hit(at, .04, .05, 7000);
+      if (i % 4 === 0) (i % 8 === 0 ? kick(at) : hit(at, .12, .18, 1500));
+    }
+    const next = t0 + LOOP * STEP;
+    setTimeout(() => chiptune(next), Math.max(0, (next - audio.currentTime - 2) * 1000));
+  }
+  function rickSound() {
+    if (!audio || master) return;
+    master = audio.createGain(); master.gain.value = .6; master.connect(audio.destination);
+    noise = audio.createBuffer(1, audio.sampleRate, audio.sampleRate);
+    noise.getChannelData(0).forEach((_, k, d) => { d[k] = Math.random() * 2 - 1; });
+    chiptune(audio.currentTime + .1);
+    rickHint.textContent = "🎶 The hacker's demands (8-bit remix)";
+  }
 
   const unlock = () => {
     if (!audio) try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
