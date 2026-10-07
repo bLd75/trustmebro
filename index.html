@@ -143,26 +143,44 @@
   #bsod .code { font-family: ui-monospace, monospace; font-size: 12px; color: #999; }
   #bsod.k-linux { background: #000; color: #ccc; font: 13px/1.5 ui-monospace, "DejaVu Sans Mono", monospace; padding: 16px; white-space: pre-wrap; overflow: hidden; }
 
-  #reveal { position: fixed; inset: 0; z-index: 60; display: none; overflow-y: auto; padding: 32px 16px;
-    background: radial-gradient(circle at 50% 0%, #2a1a5e, #0b0b14 70%); color: #f4f4f8;
+  #reveal { position: fixed; inset: 0; z-index: 60; display: none; overflow: hidden; background: #000; color: #fff;
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif; text-align: center; }
-  #reveal .card { max-width: 640px; margin: 0 auto; }
-  #reveal .emoji { font-size: 84px; animation: wave 1.2s ease-in-out infinite; display: inline-block; }
-  @keyframes wave { 50% { transform: rotate(-18deg); } }
-  #reveal h2 { font-size: clamp(34px, 8vw, 64px); margin: 8px 0; letter-spacing: 1px;
-    background: linear-gradient(90deg, #ffd166, #ef476f, #8338ec); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  #reveal p { font-size: 18px; line-height: 1.5; color: #c9c9da; }
-  .search { display: flex; align-items: center; gap: 10px; margin: 22px auto 14px; max-width: 560px;
-    background: #fff; color: #222; border-radius: 28px; padding: 12px 18px; text-align: left; box-shadow: 0 4px 24px rgba(0,0,0,.4); }
-  .search .typed { flex: 1; min-height: 1.2em; font-size: 17px; }
-  .cta { display: inline-block; margin: 6px; padding: 12px 22px; border-radius: 10px; border: 0; cursor: pointer;
-    font: 600 16px system-ui, sans-serif; text-decoration: none; background: #8338ec; color: #fff; }
-  .cta.alt { background: transparent; border: 1px solid #555; color: #ddd; }
-  .maker { margin-top: 40px; padding: 18px; border: 1px dashed #444; border-radius: 12px; }
-  .maker h3 { margin: 0 0 10px; font-size: 16px; color: #aaa; font-weight: 600; }
-  .maker input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #15151f; color: #fff; font-size: 16px; }
-  .maker .row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
-  .small { font-size: 13px !important; color: #777 !important; }
+  #reveal .chad { position: absolute; inset: 0; background: url(gigachad.jpg) center 22% / cover no-repeat;
+    animation: zoom 12s ease-out forwards; }
+  @keyframes zoom { from { transform: scale(1.25); filter: brightness(.2); } to { transform: scale(1); filter: brightness(1); } }
+  #reveal .shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.92) 0%, rgba(0,0,0,.55) 38%, transparent 65%); }
+  #reveal .card { position: absolute; left: 0; right: 0; bottom: 0; padding: 24px 16px 28px; max-width: 760px; margin: 0 auto; }
+  #reveal .card > * { opacity: 0; animation: rise .8s ease-out forwards; }
+  #reveal .card > :nth-child(1) { animation-delay: .6s; }
+  #reveal .card > :nth-child(2) { animation-delay: 1.6s; }
+  #reveal .card > :nth-child(3) { animation-delay: 2.8s; }
+  #reveal .card > :nth-child(4) { animation-delay: 4s; }
+  #reveal .card > :nth-child(5) { animation-delay: 4.6s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  #reveal p { font-size: clamp(17px, 2.6vw, 24px); line-height: 1.4; margin: 6px 0; text-shadow: 0 2px 12px #000; }
+  #reveal h2 { font: 900 clamp(36px, 9vw, 80px)/1.05 Impact, "Arial Black", system-ui, sans-serif; margin: 18px 0 14px;
+    letter-spacing: 1px; text-transform: uppercase; filter: drop-shadow(0 4px 14px rgba(0,0,0,.9)); }
+  #reveal h2 .gold { background: linear-gradient(90deg, #f7d774, #fff6c9, #e0a526, #fff6c9, #f7d774); background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-box-decoration-break: clone; box-decoration-break: clone;
+    animation: shine 3s linear 3.6s infinite; }
+  @keyframes shine { to { background-position: 200% center; } }
+  @media (min-aspect-ratio: 5/4) {
+    #reveal .chad { left: auto; width: min(62vw, calc(100vh * 800 / 922)); background-position: center;
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 35%); mask-image: linear-gradient(to right, transparent, #000 35%); }
+    #reveal .shade { display: none; }
+    #reveal .card { right: auto; bottom: auto; top: 50%; transform: translateY(-50%); width: 55vw; max-width: 680px;
+      margin: 0; padding: 0 0 0 6vw; text-align: left; }
+    #reveal h2 { font-size: clamp(36px, 5.6vw, 80px); }
+    .cta { margin-left: 0; }
+  }
+  .win.rick { z-index: 70; right: 12px; bottom: 12px; width: min(300px, 92vw); }
+  .rick .vid { aspect-ratio: 16 / 9; background: #000; }
+  .rick .vid iframe { width: 100%; height: 100%; display: block; border: 0; }
+  .rick .hint { padding: 6px 10px 8px; font-size: 12px; text-align: center; }
+  @media (max-aspect-ratio: 5/4) { body.revealed .win.rick { bottom: auto; top: 12px; } }
+  .cta { display: inline-block; margin: 6px; padding: 11px 22px; border-radius: 10px; cursor: pointer;
+    font: 600 15px system-ui, sans-serif; background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.35); color: #fff; }
+  .small { font-size: 12px !important; color: #999 !important; }
 </style>
 </head>
 <body>
@@ -196,26 +214,14 @@
 <div id="bsod"></div>
 
 <div id="reveal">
+  <div class="chad" role="img" aria-label="Gigachad"></div>
+  <div class="shade"></div>
   <div class="card">
-    <div class="emoji">🤙</div>
-    <h2>TRUST ME BRO</h2>
-    <p>Relax. Nothing happened. Your funds are exactly as fine as they were, your IP is not in a botnet,
-       and nobody saw you through your webcam (this time).</p>
-    <div id="asked"></div>
-    <div class="search"><span>🔍</span><span class="typed cursor" id="typed"></span></div>
-    <a class="cta" id="google" target="_blank" rel="noopener">Google it for me</a>
-    <a class="cta alt" id="ddg" target="_blank" rel="noopener">…or DuckDuckGo, I'm not judging</a>
-    <div><button class="cta alt" id="replay">↻ Get hacked again</button></div>
-
-    <div class="maker">
-      <h3>😈 Someone asked you a dumb question? Send them their own link.</h3>
-      <input id="q-in" placeholder="e.g. how do I exit vim" maxlength="300">
-      <div class="row">
-        <button class="cta" id="copy">Copy prank link</button>
-      </div>
-      <p class="small" id="copied"></p>
-    </div>
-    <p class="small">No data was harmed in the making of this page. Everything shown ran in your browser and went nowhere.</p>
+    <p>Finally, I'm cancelling the hack.</p>
+    <p>You look like someone nice. 🤝</p>
+    <h2><span class="gold">Hail ChadStakeKing</span> 👑</h2>
+    <div><button class="cta" id="replay">↻ Get hacked again</button></div>
+    <p class="small">No data was harmed in the making of this page. Everything ran in your browser and went nowhere.</p>
   </div>
 </div>
 
@@ -224,7 +230,6 @@
   const DURATION = 30;
   const MAX_WINDOWS = 28;
   const params = new URLSearchParams(location.search);
-  const question = (params.get("q") || "").trim().slice(0, 300);
 
   const rand = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
   const pick = arr => arr[rand(0, arr.length - 1)];
@@ -318,9 +323,29 @@
     g.gain.exponentialRampToValueAtTime(.0001, audio.currentTime + .15);
     o.connect(g).connect(audio.destination); o.start(); o.stop(audio.currentTime + .16);
   }
-  addEventListener("pointerdown", () => {
+  const RICK = "dQw4w9WgXcQ";
+  let yt = null, wantSound = false;
+  const rickHint = el("div", { className: "hint", textContent: "🔇 Click or tap anywhere to hear the hacker's demands" });
+  function rickSound() {
+    wantSound = true;
+    if (!yt || !yt.unMute) return;
+    yt.unMute(); yt.setVolume(80); yt.playVideo();
+    rickHint.textContent = "🎶 The hacker's demands";
+  }
+  window.onYouTubeIframeAPIReady = () => {
+    yt = new YT.Player("yt", {
+      videoId: RICK,
+      playerVars: { autoplay: 1, mute: 1, controls: 0, playsinline: 1, loop: 1, playlist: RICK, rel: 0 },
+      events: { onReady: e => { e.target.mute(); e.target.playVideo(); if (wantSound) rickSound(); } },
+    });
+  };
+
+  const unlock = () => {
     if (!audio) try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
-  }, { once: true });
+    rickSound();
+  };
+  addEventListener("pointerdown", unlock, { once: true });
+  addEventListener("keydown", unlock, { once: true });
 
   let topZ = 10, spawned = 0, finished = false;
   const deck = [];
@@ -452,6 +477,17 @@
     });
   }, 50);
 
+  const rickTitle = el("span", { textContent: "📼 hacker_message.mp4" });
+  const rickCtl = controls();
+  const rickBar = el("div", { className: "bar" }, [...(rickCtl.left || []), rickTitle, ...(rickCtl.right || [])]);
+  const rick = el("div", { className: "win rick" }, [rickBar, el("div", { className: "vid" }, [el("div", { id: "yt" })]), rickHint]);
+  document.body.append(rick);
+  rick.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    rickTitle.textContent = pick(["Nice try 😏", "Never gonna let you close", "Access denied 🎶", "lol no"]);
+    beep();
+  }));
+  drag(rick, rickBar);
+
   let remaining = DURATION;
   const timerEl = document.getElementById("timer");
   const logTimer = setInterval(typeLog, 1100);
@@ -468,7 +504,7 @@
     if (finished) return;
     finished = true;
     [logTimer, spawnTimer, tick].forEach(clearInterval);
-    document.querySelectorAll(".win").forEach(w => w.remove());
+    document.querySelectorAll(".win:not(.rick)").forEach(w => w.remove());
     const b = document.getElementById("bsod");
     b.className = "k-" + crashKind;
     b.innerHTML = crashScreens[crashKind];
@@ -486,35 +522,13 @@
     clearInterval(rain);
     document.getElementById("bsod").style.display = "none";
     document.getElementById("reveal").style.display = "block";
-    const q = question || "how to google things";
-    const asked = document.getElementById("asked");
-    if (question) {
-      asked.append(el("p", {}, txt("You asked me: ", el("b", { textContent: `“${question}”` }))),
-                   el("p", { textContent: "I did the hard part for you. Watch closely:" }));
-    } else {
-      asked.append(el("p", { textContent: "But you know what takes less time than reading this page? Searching your question yourself:" }));
-    }
-    const typed = document.getElementById("typed");
-    let i = 0;
-    const t = setInterval(() => {
-      typed.textContent = q.slice(0, ++i);
-      if (i >= q.length) clearInterval(t);
-    }, 70);
-    const enc = encodeURIComponent(q);
-    document.getElementById("google").href = "https://www.google.com/search?q=" + enc;
-    document.getElementById("ddg").href = "https://duckduckgo.com/?q=" + enc;
+    document.body.classList.add("revealed");
   }
 
   document.getElementById("replay").addEventListener("click", () => location.reload());
-  document.getElementById("copy").addEventListener("click", async () => {
-    const v = document.getElementById("q-in").value.trim();
-    const url = location.origin + location.pathname + (v ? "?q=" + encodeURIComponent(v) : "");
-    const out = document.getElementById("copied");
-    try { await navigator.clipboard.writeText(url); out.textContent = "Copied ✓ " + url; }
-    catch (e) { out.textContent = url; }
-  });
   addEventListener("keydown", e => { if (e.key === "Escape" && !finished) bsod(); });
 })();
 </script>
+<script src="https://www.youtube.com/iframe_api" async></script>
 </body>
 </html>
