@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Re: your question</title>
+<meta property="og:title" content="Re: your question">
+<meta property="og:description" content="I looked into it, here's the answer 👇">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+<style>
+  :root {
+    --green: #39ff14;
+    --red: #ff2a2a;
+    --bg: #000;
+    --win: #c0c0c0;
+    --win-dark: #808080;
+    --title: linear-gradient(90deg, #000080, #1084d0);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); color: var(--green);
+    font-family: "Courier New", ui-monospace, monospace; }
+  body.shake { animation: shake .35s; }
+  @keyframes shake {
+    0%,100% { transform: translate(0,0); }
+    20% { transform: translate(-6px,3px); } 40% { transform: translate(5px,-4px); }
+    60% { transform: translate(-4px,-2px); } 80% { transform: translate(3px,4px); }
+  }
+  #matrix { position: fixed; inset: 0; z-index: 0; opacity: .35; }
+
+  #hud { position: fixed; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 16px; text-align: center; pointer-events: none; }
+  #skull { color: var(--red); font-size: clamp(5px, 1.5vw, 12px); line-height: 1.05; margin: 0;
+    text-shadow: 0 0 8px var(--red); animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: .55; } }
+  h1 { font-size: clamp(22px, 5vw, 52px); margin: 12px 0 4px; color: var(--red); letter-spacing: 2px;
+    text-shadow: 2px 0 #0ff, -2px 0 #f0f; animation: glitch 2.2s infinite steps(1); }
+  @keyframes glitch {
+    0%,100% { text-shadow: 2px 0 #0ff, -2px 0 #f0f; transform: none; }
+    92% { text-shadow: -4px 0 #0ff, 4px 0 #f0f; transform: skewX(8deg); }
+    95% { text-shadow: 4px 2px #0ff, -4px -2px #f0f; transform: skewX(-6deg) translateX(4px); }
+  }
+  #countdown { font-size: clamp(16px, 3vw, 26px); color: #fff; margin-bottom: 14px; }
+  #countdown b { color: var(--red); }
+  #log { width: min(640px, 100%); height: 9.5em; overflow: hidden; text-align: left; font-size: 13px;
+    background: rgba(0,20,0,.75); border: 1px solid var(--green); padding: 8px 10px; box-shadow: 0 0 18px rgba(57,255,20,.35); }
+  #log div::before { content: "> "; opacity: .6; }
+  .cursor::after { content: "█"; animation: pulse .7s infinite; }
+
+  .win { position: fixed; z-index: 10; width: min(340px, 92vw); background: var(--win); color: #000;
+    font-family: Tahoma, "Segoe UI", sans-serif; font-size: 13px;
+    border: 2px solid; border-color: #fff var(--win-dark) var(--win-dark) #fff;
+    box-shadow: 2px 2px 0 #000, 0 8px 30px rgba(0,0,0,.6); animation: pop .18s ease-out; }
+  @keyframes pop { from { transform: scale(.6); opacity: 0; } }
+  .win .bar { background: var(--title); color: #fff; font-weight: bold; padding: 3px 4px 3px 6px;
+    display: flex; align-items: center; gap: 6px; cursor: move; user-select: none; touch-action: none; }
+  .win .bar span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .win .x { width: 18px; height: 16px; line-height: 12px; font-size: 12px; font-weight: bold; padding: 0;
+    background: var(--win); border: 2px solid; border-color: #fff var(--win-dark) var(--win-dark) #fff; cursor: pointer; }
+  .win .body { display: flex; gap: 12px; padding: 14px 12px 10px; align-items: flex-start; }
+  .win .icon { font-size: 30px; line-height: 1; }
+  .win .msg { flex: 1; word-break: break-word; }
+  .win code { background: #fff; padding: 0 3px; font-size: 12px; }
+  .win .btns { display: flex; justify-content: center; gap: 8px; padding: 0 12px 12px; }
+  .win button.ok { min-width: 75px; padding: 3px 10px; background: var(--win); font: inherit; cursor: pointer;
+    border: 2px solid; border-color: #fff var(--win-dark) var(--win-dark) #fff; }
+  .progress { height: 18px; margin-top: 8px; background: #fff; border: 2px solid; border-color: var(--win-dark) #fff #fff var(--win-dark); }
+  .progress i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(90deg, #000080 0 10px, transparent 10px 12px);
+    transition: width .25s linear; }
+  .pct { font-size: 11px; margin-top: 3px; }
+
+  #bsod { position: fixed; inset: 0; z-index: 50; display: none; background: #0078d7; color: #fff;
+    font-family: "Segoe UI", sans-serif; padding: 10vh 10vw; }
+  #bsod .face { font-size: clamp(60px, 12vw, 140px); }
+  #bsod p { font-size: clamp(16px, 2.4vw, 24px); max-width: 900px; }
+
+  #reveal { position: fixed; inset: 0; z-index: 60; display: none; overflow-y: auto; padding: 32px 16px;
+    background: radial-gradient(circle at 50% 0%, #2a1a5e, #0b0b14 70%); color: #f4f4f8;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif; text-align: center; }
+  #reveal .card { max-width: 640px; margin: 0 auto; }
+  #reveal .emoji { font-size: 84px; animation: wave 1.2s ease-in-out infinite; display: inline-block; }
+  @keyframes wave { 50% { transform: rotate(-18deg); } }
+  #reveal h2 { font-size: clamp(34px, 8vw, 64px); margin: 8px 0; letter-spacing: 1px;
+    background: linear-gradient(90deg, #ffd166, #ef476f, #8338ec); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #reveal p { font-size: 18px; line-height: 1.5; color: #c9c9da; }
+  .search { display: flex; align-items: center; gap: 10px; margin: 22px auto 14px; max-width: 560px;
+    background: #fff; color: #222; border-radius: 28px; padding: 12px 18px; text-align: left; box-shadow: 0 4px 24px rgba(0,0,0,.4); }
+  .search .typed { flex: 1; min-height: 1.2em; font-size: 17px; }
+  .cta { display: inline-block; margin: 6px; padding: 12px 22px; border-radius: 10px; border: 0; cursor: pointer;
+    font: 600 16px system-ui, sans-serif; text-decoration: none; background: #8338ec; color: #fff; }
+  .cta.alt { background: transparent; border: 1px solid #555; color: #ddd; }
+  .maker { margin-top: 40px; padding: 18px; border: 1px dashed #444; border-radius: 12px; }
+  .maker h3 { margin: 0 0 10px; font-size: 16px; color: #aaa; font-weight: 600; }
+  .maker input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #15151f; color: #fff; font-size: 16px; }
+  .maker .row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
+  .small { font-size: 13px !important; color: #777 !important; }
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+
+<div id="hud">
+<pre id="skull">
+                 uuuuuuu
+             uu$$$$$$$$$$$uu
+          uu$$$$$$$$$$$$$$$$$uu
+         u$$$$$$$$$$$$$$$$$$$$$u
+        u$$$$$$$$$$$$$$$$$$$$$$$u
+       u$$$$$$$$$$$$$$$$$$$$$$$$$u
+       u$$$$$$"   "$$$"   "$$$$$$u
+       "$$$$"      u$u       $$$$"
+        $$$u       u$u       u$$$
+        $$$u      u$$$u      u$$$
+         "$$$$uu$$$   $$$uu$$$$"
+          "$$$$$$$"   "$$$$$$$"
+            u$$$$$$$u$$$$$$$u
+             u$"$"$"$"$"$"$u
+  uuu        $$u$ $ $ $ $u$$       uuu
+ u$$$$        $$$$$u$u$u$$$       u$$$$
+  $$$$$uu      "$$$$$$$$$"     uu$$$$$$
+</pre>
+  <h1>YOUR SYSTEM HAS BEEN HACKED</h1>
+  <div id="countdown">Total data wipe in <b id="timer">00:30</b></div>
+  <div id="log"></div>
+</div>
+
+<div id="bsod">
+  <div class="face">:(</div>
+  <p>Your PC ran into a problem it couldn't handle: <b>a question that Google could have answered in 0.42 seconds.</b></p>
+  <p id="bsod-pct">0% complete</p>
+  <p style="font-size:14px">Stop code: PEBKAC_ASKED_INSTEAD_OF_SEARCHING</p>
+</div>
+
+<div id="reveal">
+  <div class="card">
+    <div class="emoji">🤙</div>
+    <h2>TRUST ME BRO</h2>
+    <p>Relax. Nothing happened. Your funds are exactly as fine as they were, your IP is not in a botnet,
+       and nobody saw you through your webcam (this time).</p>
+    <div id="asked"></div>
+    <div class="search"><span>🔍</span><span class="typed cursor" id="typed"></span></div>
+    <a class="cta" id="google" target="_blank" rel="noopener">Google it for me</a>
+    <a class="cta alt" id="ddg" target="_blank" rel="noopener">…or DuckDuckGo, I'm not judging</a>
+    <div><button class="cta alt" id="replay">↻ Get hacked again</button></div>
+
+    <div class="maker">
+      <h3>😈 Someone asked you a dumb question? Send them their own link.</h3>
+      <input id="q-in" placeholder="e.g. how do I exit vim" maxlength="300">
+      <div class="row">
+        <button class="cta" id="copy">Copy prank link</button>
+      </div>
+      <p class="small" id="copied"></p>
+    </div>
+    <p class="small">No data was harmed in the making of this page. Everything shown ran in your browser and went nowhere.</p>
+  </div>
+</div>
+
+<script>
+(() => {
+  const DURATION = 30;
+  const MAX_WINDOWS = 28;
+  const params = new URLSearchParams(location.search);
+  const question = (params.get("q") || "").trim().slice(0, 300);
+
+  const rand = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+  const pick = arr => arr[rand(0, arr.length - 1)];
+  const hex = n => Array.from({ length: n }, () => "0123456789abcdef"[rand(0, 15)]).join("");
+  const wallet = "0x" + hex(40);
+  const fakeIp = `${rand(11, 223)}.${rand(0, 255)}.${rand(0, 255)}.${rand(1, 254)}`;
+  let ip = fakeIp;
+
+  const ua = navigator.userAgent;
+  const os = /Windows/.test(ua) ? "Windows" : /Mac OS X/.test(ua) ? (/iPhone|iPad/.test(ua) ? "iOS" : "macOS")
+           : /Android/.test(ua) ? "Android" : /Linux/.test(ua) ? "Linux" : "a potato";
+  const browser = /Edg\//.test(ua) ? "Edge" : /Firefox\//.test(ua) ? "Firefox" : /Chrome\//.test(ua) ? "Chrome"
+                : /Safari\//.test(ua) ? "Safari" : "something weird";
+  const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || "Earth").replace(/_/g, " ");
+  const screenRes = `${screen.width}×${screen.height}`;
+  const cores = navigator.hardwareConcurrency || "??";
+  let battery = null;
+
+  const ipCtl = new AbortController();
+  setTimeout(() => ipCtl.abort(), 2500);
+  fetch("https://api.ipify.org?format=json", { signal: ipCtl.signal })
+    .then(r => r.json()).then(d => { if (d && d.ip) ip = d.ip; }).catch(() => {});
+  if (navigator.getBattery) navigator.getBattery().then(b => { battery = Math.round(b.level * 100); }).catch(() => {});
+
+  const el = (tag, props = {}, kids = []) => {
+    const n = Object.assign(document.createElement(tag), props);
+    kids.forEach(k => n.append(k));
+    return n;
+  };
+  const code = t => el("code", { textContent: t });
+  const txt = (...parts) => parts.map(p => typeof p === "string" ? document.createTextNode(p) : p);
+
+  const messages = [
+    () => ({ title: "Transaction confirmed", icon: "💸", body: txt("Your funds (", el("b", { textContent: `${rand(12, 99)},${rand(100, 999)}.${rand(10, 99)} USDT` }), ") have been transferred to ", code(wallet.slice(0, 10) + "…" + wallet.slice(-6)), ". Gas fee paid by you, obviously.") }),
+    () => ({ title: "Botnet enrollment", icon: "🧟", body: txt("Your IP address ", code(ip), " is now proudly part of the world's biggest zombie botnet. Welcome, node ", el("b", { textContent: `#${rand(1, 9)},${rand(100, 999)},${rand(100, 999)}` }), ". Your smart fridge vouched for you.") }),
+    () => ({ title: "LinkedIn Sync", icon: "📤", progress: "Uploading full browser history to your LinkedIn profile…" }),
+    () => ({ title: "Camera", icon: "📷", body: txt("Webcam access granted. Nice shirt. Is that yesterday's?") }),
+    () => ({ title: "Outlook", icon: "📧", body: txt("Email sent to ", el("b", { textContent: "All-Company" }), ": \"Hi all, I'm the one who microwaves fish in the kitchen. Sorry not sorry.\"") }),
+    () => ({ title: "CryptoLocker 3000", icon: "🔒", progress: "Encrypting ~/Documents/definitely_not_memes/…" }),
+    () => ({ title: "Password Manager", icon: "🔑", body: txt("We found your password. It was ", code("Password123!"), ". We're not even mad, just disappointed.") }),
+    () => ({ title: "Food delivery", icon: "🍕", body: txt(`${rand(30, 60)} pineapple pizzas are on their way to your desk. Paid with your card ending in ${rand(1000, 9999)}.`) }),
+    () => ({ title: "Jira", icon: "📋", body: txt(`All ${rand(200, 900)} open tickets have been reassigned to you. Priority: `, el("b", { textContent: "Blocker" }), ". Due: yesterday.") }),
+    () => ({ title: "Git", icon: "🌳", body: txt("Replaced all tabs with spaces in every repo. Then spaces with tabs. Then ", code("git push --force origin main"), ". CI is 🔥.") }),
+    () => ({ title: "System scan", icon: "🖥️", body: txt("Target acquired: ", el("b", { textContent: `${os} / ${browser}` }), `, ${cores} CPU cores, ${screenRes} screen, located in `, el("b", { textContent: tz }), ". We know everything.") }),
+    () => ({ title: "Calendar", icon: "📅", body: txt("Booked a 4-hour meeting \"Sync about our syncs\" with the CEO, tomorrow 7:00 AM. Cameras mandatory.") }),
+    () => ({ title: "GPU Hijack", icon: "⛏️", progress: "Mining $DOGE with your graphics card…" }),
+    () => ({ title: "Slack", icon: "💬", body: txt("Status updated to: ", el("b", { textContent: "🤡 asking questions Google could answer" }), ". Set to never expire.") }),
+    () => ({ title: "Battery", icon: "🔋", body: txt(battery != null ? `Your battery is at ${battery}%. Ours is at 100%. Hacker life.` : "Draining your battery for fun. Hacker life.") }),
+    () => ({ title: "AI Assistant", icon: "🧠", body: txt("Your entire AI chat history has been published on the company wiki. Including the one about \"how to look busy\".") }),
+    () => ({ title: "Spotify", icon: "🎵", body: txt("Your Wrapped has been shared with HR. Top artist: Nickelback (4,212 min).") }),
+    () => ({ title: "Bank of Mom", icon: "🏦", body: txt("Wire of €0.69 sent to your mom with memo: \"for all the questions I asked\".") }),
+    () => ({ title: "Antivirus", icon: "🛡️", progress: "Uninstalling your antivirus (it asked us nicely)…" }),
+    () => ({ title: "NFT Mint", icon: "🖼️", body: txt("Your LinkedIn profile picture was minted as an NFT. Floor price: ", code("0.0000001 ETH"), ". No bids.") }),
+    () => ({ title: "Ransom note", icon: "💀", body: txt("Send ", el("b", { textContent: "1 BTC" }), " to ", code(wallet.slice(0, 14) + "…"), " or we tell everyone you clap when the plane lands.") }),
+  ];
+
+  const logLines = [
+    "Bypassing firewall… OK", "Disabling antivirus (it was Windows Defender, lol)", "Rerouting through 7 proxies",
+    "Hacking the mainframe with 2 people on 1 keyboard", "Downloading more RAM… 64GB", "Injecting SQL into your coffee machine",
+    "Enhancing… enhancing… ENHANCE", "Decrypting your feelings… 0 found", "Reticulating splines", "sudo make me a sandwich",
+    "Converting your Excel files to Comic Sans", "Brute-forcing password: hunter2 ✓", "Uploading /home to the cloud (someone else's)",
+    "Bribing the Kubernetes pods", "rm -rf node_modules (finally, a good deed)", "Pinging NSA… they already knew",
+    "Unsubscribing you from all newsletters except crypto ones", "Spoofing MAC address to 69:42:0B:AD:C0:DE",
+  ];
+
+  const logBox = document.getElementById("log");
+  let logIdx = 0;
+  function typeLog() {
+    const line = logLines[logIdx++ % logLines.length];
+    const div = el("div", { className: "cursor" });
+    logBox.append(div);
+    while (logBox.children.length > 8) logBox.firstChild.remove();
+    let i = 0;
+    const t = setInterval(() => {
+      div.textContent = line.slice(0, ++i);
+      if (i >= line.length) { clearInterval(t); div.classList.remove("cursor"); }
+    }, 18);
+  }
+
+  let audio = null;
+  function beep() {
+    if (!audio) return;
+    const o = audio.createOscillator(), g = audio.createGain();
+    o.type = "square"; o.frequency.value = pick([220, 330, 440, 587]);
+    g.gain.setValueAtTime(.04, audio.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001, audio.currentTime + .15);
+    o.connect(g).connect(audio.destination); o.start(); o.stop(audio.currentTime + .16);
+  }
+  addEventListener("pointerdown", () => {
+    if (!audio) try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+  }, { once: true });
+
+  let topZ = 10, spawned = 0, finished = false;
+  const deck = [];
+  function nextMessage() {
+    if (!deck.length) deck.push(...messages.slice().sort(() => Math.random() - .5));
+    return deck.pop()();
+  }
+
+  function spawn(where) {
+    if (finished || spawned >= MAX_WINDOWS) return;
+    spawned++;
+    const m = nextMessage();
+    const closeBtn = el("button", { className: "x", textContent: "×", title: "Close" });
+    const bar = el("div", { className: "bar" }, [el("span", { textContent: m.title }), closeBtn]);
+    const msg = el("div", { className: "msg" });
+    if (m.progress) {
+      const fill = el("i"), pct = el("div", { className: "pct", textContent: "0%" });
+      msg.append(m.progress, el("div", { className: "progress" }, [fill]), pct);
+      let p = 0;
+      const t = setInterval(() => {
+        p = Math.min(100, p + rand(2, 11));
+        fill.style.width = p + "%";
+        pct.textContent = p < 100 ? `${p}% — ${rand(1, 9)} min remaining` : "100% — Done. Thanks for your cooperation 🙏";
+        if (p >= 100) clearInterval(t);
+      }, 280);
+    } else {
+      msg.append(...m.body);
+    }
+    const okBtn = el("button", { className: "ok", textContent: pick(["OK", "OK :(", "Accept fate", "Cool cool cool", "Mom?"]) });
+    const win = el("div", { className: "win" }, [
+      bar,
+      el("div", { className: "body" }, [el("div", { className: "icon", textContent: m.icon }), msg]),
+      el("div", { className: "btns" }, [okBtn]),
+    ]);
+    document.body.append(win);
+    const w = win.offsetWidth, h = win.offsetHeight;
+    const x = where ? where.x + rand(-60, 60) : rand(8, Math.max(8, innerWidth - w - 8));
+    const y = where ? where.y + rand(-40, 60) : rand(8, Math.max(8, innerHeight - h - 8));
+    win.style.left = Math.min(Math.max(4, x), innerWidth - w - 4) + "px";
+    win.style.top = Math.min(Math.max(4, y), innerHeight - h - 4) + "px";
+    win.style.zIndex = ++topZ;
+    win.addEventListener("pointerdown", () => { win.style.zIndex = ++topZ; });
+    drag(win, bar);
+    const hydra = () => {
+      const r = win.getBoundingClientRect();
+      win.remove();
+      spawn({ x: r.left, y: r.top });
+      setTimeout(() => spawn({ x: r.left + 40, y: r.top + 30 }), 150);
+    };
+    closeBtn.addEventListener("click", hydra);
+    okBtn.addEventListener("click", hydra);
+    beep();
+    document.body.classList.remove("shake"); void document.body.offsetWidth; document.body.classList.add("shake");
+  }
+
+  function drag(win, handle) {
+    let sx, sy, ox, oy;
+    handle.addEventListener("pointerdown", e => {
+      if (e.target.closest(".x")) return;
+      sx = e.clientX; sy = e.clientY; ox = win.offsetLeft; oy = win.offsetTop;
+      handle.setPointerCapture(e.pointerId);
+    });
+    handle.addEventListener("pointermove", e => {
+      if (!handle.hasPointerCapture(e.pointerId)) return;
+      win.style.left = ox + e.clientX - sx + "px";
+      win.style.top = oy + e.clientY - sy + "px";
+    });
+  }
+
+  const canvas = document.getElementById("matrix"), ctx = canvas.getContext("2d");
+  const glyphs = "アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789$₿ΞHACKED";
+  const fontSize = 16;
+  let drops = [];
+  function resize() {
+    canvas.width = innerWidth; canvas.height = innerHeight;
+    drops = Array(Math.ceil(innerWidth / fontSize)).fill(0).map(() => rand(-50, 0));
+  }
+  resize(); addEventListener("resize", resize);
+  const rain = setInterval(() => {
+    ctx.fillStyle = "rgba(0,0,0,.08)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#39ff14"; ctx.font = fontSize + "px monospace";
+    drops.forEach((d, i) => {
+      ctx.fillText(pick(glyphs), i * fontSize, d * fontSize);
+      drops[i] = d * fontSize > canvas.height && Math.random() > .975 ? 0 : d + 1;
+    });
+  }, 50);
+
+  let remaining = DURATION;
+  const timerEl = document.getElementById("timer");
+  const logTimer = setInterval(typeLog, 1100);
+  const spawnTimer = setInterval(() => spawn(), 1300);
+  const tick = setInterval(() => {
+    remaining--;
+    timerEl.textContent = "00:" + String(Math.max(0, remaining)).padStart(2, "0");
+    if (remaining <= 0) bsod();
+  }, 1000);
+  typeLog();
+  setTimeout(() => spawn(), 600);
+
+  function bsod() {
+    if (finished) return;
+    finished = true;
+    [logTimer, spawnTimer, tick].forEach(clearInterval);
+    document.querySelectorAll(".win").forEach(w => w.remove());
+    const b = document.getElementById("bsod"), pct = document.getElementById("bsod-pct");
+    b.style.display = "block";
+    let p = 0;
+    const t = setInterval(() => {
+      p = Math.min(100, p + rand(7, 19));
+      pct.textContent = p + "% complete";
+      if (p >= 100) { clearInterval(t); setTimeout(reveal, 500); }
+    }, 300);
+  }
+
+  function reveal() {
+    clearInterval(rain);
+    document.getElementById("bsod").style.display = "none";
+    document.getElementById("reveal").style.display = "block";
+    const q = question || "how to google things";
+    const asked = document.getElementById("asked");
+    if (question) {
+      asked.append(el("p", {}, txt("You asked me: ", el("b", { textContent: `“${question}”` }))),
+                   el("p", { textContent: "I did the hard part for you. Watch closely:" }));
+    } else {
+      asked.append(el("p", { textContent: "But you know what takes less time than reading this page? Searching your question yourself:" }));
+    }
+    const typed = document.getElementById("typed");
+    let i = 0;
+    const t = setInterval(() => {
+      typed.textContent = q.slice(0, ++i);
+      if (i >= q.length) clearInterval(t);
+    }, 70);
+    const enc = encodeURIComponent(q);
+    document.getElementById("google").href = "https://www.google.com/search?q=" + enc;
+    document.getElementById("ddg").href = "https://duckduckgo.com/?q=" + enc;
+  }
+
+  document.getElementById("replay").addEventListener("click", () => location.reload());
+  document.getElementById("copy").addEventListener("click", async () => {
+    const v = document.getElementById("q-in").value.trim();
+    const url = location.origin + location.pathname + (v ? "?q=" + encodeURIComponent(v) : "");
+    const out = document.getElementById("copied");
+    try { await navigator.clipboard.writeText(url); out.textContent = "Copied ✓ " + url; }
+    catch (e) { out.textContent = url; }
+  });
+  addEventListener("keydown", e => { if (e.key === "Escape" && !finished) bsod(); });
+})();
+</script>
+</body>
+</html>
